@@ -1,0 +1,12 @@
+seed: 42
+epochs: 20
+batch_size: 4
+workers: 0
+learning_rate: 0.001
+patience: 7
+segment_seconds: 1.0
+waveform_weight: 1.0
+spectral_weight: 0.5
+log_weight: 0.5
+snr_min: -5.0
+snr_max: 20.0

@@ -1,0 +1,46 @@
+# Machine-specific and generated development state
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+node_modules/
+frontend/dist/
+*.log
+.DS_Store
+
+# Local configuration and credentials; preserve the safe example
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+
+# Privacy protection: do not automatically stage recordings or real datasets.
+# Only the deliberately constructed NON-SPEECH synthetic fixtures are committed.
+data/*
+!data/synthetic/
+*.wav
+*.flac
+!data/synthetic/**/*.wav
+
+# Commit only the synthetic software-test artifacts; other model and
+# consultation recordings remain private by default.
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/manifest.jsonl
+!artifacts/software-test-run/
+!artifacts/software-test-benchmark/
+!artifacts/software-test-benchmark-neural/
+!artifacts/verification/
+*.pt
+*.pth
+!artifacts/verification/synthetic_listening/*.wav
+
+# Data and ZIP copies, if created inside the checkout
+*.zip

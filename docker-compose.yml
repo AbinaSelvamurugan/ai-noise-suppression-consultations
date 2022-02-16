@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      CONSULT_DEVICE: cpu
+      CONSULT_CHECKPOINT_DIR: /app/artifacts/checkpoints
+      CONSULT_CORS_ORIGINS: http://localhost:5173
+      CONSULT_MAX_UPLOAD_MB: "20"
+      CONSULT_MAX_DURATION_S: "120"
+      CONSULT_MAX_CONCURRENT: "2"
+    volumes:
+      - ./artifacts/checkpoints:/app/artifacts/checkpoints:ro
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:5173:80"
+    restart: unless-stopped

@@ -1,0 +1,3 @@
+seed: 42
+snrs_db: [-5, 0, 5, 10, 20]
+max_examples: 100

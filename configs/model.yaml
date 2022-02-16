@@ -1,0 +1,5 @@
+n_fft: 512
+hop: 128
+conv_channels: 8
+hidden: 96
+layers: 1
