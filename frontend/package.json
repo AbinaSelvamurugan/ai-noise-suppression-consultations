@@ -1,0 +1,30 @@
+{
+  "name": "consultation-audio-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "fflate": "0.8.2",
+    "lucide-react": "0.468.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "recharts": "3.1.2"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.0",
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "jsdom": "26.1.0",
+    "typescript": "5.8.3",
+    "vite": "6.3.5",
+    "vitest": "3.2.4",
+    "@types/node": "22.15.30"
+  }
+}
