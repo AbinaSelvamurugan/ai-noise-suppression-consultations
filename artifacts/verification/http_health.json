@@ -1,0 +1,11 @@
+{
+  "http_status": 200,
+  "result": {
+    "status": "ok",
+    "version": "0.1.0",
+    "sample_rate": 16000,
+    "device": "cpu",
+    "neural_available": false,
+    "spectral_available": true
+  }
+}

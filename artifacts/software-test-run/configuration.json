@@ -1,0 +1,27 @@
+{
+  "seed": 42,
+  "epochs": 2,
+  "batch_size": 4,
+  "learning_rate": 0.001,
+  "patience": 7,
+  "segment_seconds": 1.0,
+  "waveform_weight": 1.0,
+  "spectral_weight": 0.5,
+  "log_weight": 0.5,
+  "model": {
+    "architecture": "ConvRecurrentMask-v1",
+    "config": {
+      "n_fft": 512,
+      "hop": 128,
+      "conv_channels": 8,
+      "hidden": 96,
+      "layers": 1
+    },
+    "parameters": 131193,
+    "sample_rate": 16000,
+    "features": "log1p(abs(rfft(sqrt_hann_windowed_frame)))",
+    "mask": "sigmoid gain [0,1]",
+    "channel_policy": "stereo averaged to mono"
+  },
+  "dataset": "artifacts/manifest.jsonl"
+}
