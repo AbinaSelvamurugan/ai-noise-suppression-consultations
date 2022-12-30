@@ -130,9 +130,12 @@ def train(root: Path, manifest: Path, output: Path, *, epochs: int = 20,
                     if mode == 'train':
                         scaler.scale(loss['total']).backward()
                         scaler.unscale_(optimizer)
+                        # With mixed precision the GradScaler routinely meets inf gradients while it
+                        # calibrates its scale and skips those steps itself; only fail hard without it.
                         grad_norm = nn.utils.clip_grad_norm_(model.parameters(), 3.0,
-                                                             error_if_nonfinite=True)
-                        grad_max = max(grad_max, float(grad_norm))
+                                                             error_if_nonfinite=not mixed_precision)
+                        if torch.isfinite(grad_norm):
+                            grad_max = max(grad_max, float(grad_norm))
                         scaler.step(optimizer)
                         scaler.update()
                 for name in counters:
