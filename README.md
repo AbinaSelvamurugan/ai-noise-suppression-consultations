@@ -219,3 +219,40 @@ Generated artifacts from the synthetic fixture are checked in for reference.
 ![Training-loss trace (synthetic fixture)](artifacts/verification/synthetic-training-loss.png)
 
 ![SI-SDR on synthetic signals](artifacts/verification/synthetic_si_sdr.png)
+
+## Real-data run (30 December 2022)
+
+Trained and benchmarked on a Modal H100 GPU using real, public recordings built by `scripts/build_real_dataset.py`:
+LibriSpeech dev-clean + test-clean (80 speakers, 5,323 utterances, about 10.8 hours; CC BY 4.0) and eight DEMAND
+noise environments (CC BY 4.0 per the Zenodo record). `scripts/prepare_dataset.py` split them by speaker and by noise
+file: 56 / 12 / 12 speakers and 5 / 1 / 2 noise recordings for train / validation / test (3,611 / 856 / 856
+utterances). **The test speakers and the two test noise recordings were never seen in training.**
+
+Training settings used: `batch_size` 32 and `workers` 28 (the shipped config uses 4 and 0), mixed precision on CUDA,
+otherwise `configs/training.yaml` and `configs/model.yaml`. The model (`ConvRecurrentMask`, 131,193 parameters) trained
+for 37 epochs (early stopping) in 836 s; best validation loss 0.4447.
+
+Benchmark (`scripts/benchmark.py`, 100 test clips per SNR, mean SI-SDR improvement in dB, ± 95% CI half-width):
+
+| Input SNR | Spectral subtraction (baseline) | Neural model |
+|-----------|-----|-----|
+| -5 dB | +4.09 ± 0.90 | **+13.19 ± 1.28** |
+| 0 dB | +3.56 ± 0.92 | **+11.77 ± 1.08** |
+| 5 dB | +1.80 ± 1.03 | **+10.16 ± 0.90** |
+| 10 dB | -1.01 ± 1.24 | **+8.59 ± 0.77** |
+| 20 dB | -8.61 ± 1.66 | **+5.17 ± 0.67** |
+
+The neural model improves SI-SDR at every noise level; the classical baseline degrades the signal at 10 and 20 dB.
+
+Latency (per clip): spectral subtraction about 4 ms on CPU (real-time factor 0.004); neural model about 50 ms
+(real-time factor about 0.05) measured on the H100, so CPU or edge latency has **not** been measured. SI-SDR is an
+objective metric and is not a listening test; this project has not been evaluated with clinicians, patients or
+human listeners.
+
+![SI-SDR improvement by input SNR](artifacts/benchmark/si_sdr_improvement_db.png)
+
+Benchmark figures and `summary.csv` are committed under `artifacts/benchmark/`; the per-clip results and the trained
+checkpoint (`artifacts/checkpoints/best.pt`) are not.
+
+Fixed while running on real data: `src/consult_audio/training.py` no longer raises on infinite gradients when mixed
+precision is on, because the gradient scaler skips those steps itself (training crashed in epoch 1 without this).
